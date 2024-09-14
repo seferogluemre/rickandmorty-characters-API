@@ -9,8 +9,61 @@ async function charactersFetchData() {
   }
 }
 
-const renderCharactes = (character) => {
+const selectOptionRender = (character) => {
+  const status = character.map((data) => data.status);
+  const unique = [...new Set(status)];
+  let label;
+  const select = document.getElementById("select-option");
+  select.innerHTML = ` <option value="All">Tüm Karakterler</option>`;
+
+  unique.map((statusData) => {
+    switch (statusData) {
+      case "Alive":
+        label = "Yaşayanlar";
+        break;
+
+      case "Dead":
+        label = "Yaşamayanlar";
+        break;
+
+      case "unknown":
+        label = "Bilinmeyenler";
+        break;
+
+      default:
+        label = statusData;
+    }
+    select.innerHTML += `<option value="${statusData}">${label}</option>`;
+  });
+};
+
+// FİLTRELEME İŞLEMİ --------------
+const filteredByStatus = (event, character) => {
+  if (event === "All") {
+    return character;
+  }
+
+  return character.filter((data) => data.status === event);
+};
+
+const handleChangeFilter = (event, characters) => {
+  const selectedValue = event.target.value;
+  const filtered = filteredByStatus(selectedValue, characters);
+  renderCharacters(filtered);
+};
+
+const initStatusFiltered = (characters) => {
+  const select = document.getElementById("select-option");
+
+  select.addEventListener("change", (event) => {
+    handleChangeFilter(event, characters);
+  });
+};
+// -------------------------------
+
+const renderCharacters = (character) => {
   const section = document.getElementById("charactersSection");
+  section.innerHTML = "";
   const container = document.createElement("div");
   container.className = "container";
   const row = document.createElement("div");
@@ -18,7 +71,7 @@ const renderCharactes = (character) => {
   section.appendChild(container);
   container.appendChild(row);
 
-  const charactersItems = character.map((character) => {
+  character.forEach((character) => {
     const div = document.createElement("div");
     div.className = "card";
 
@@ -27,6 +80,17 @@ const renderCharactes = (character) => {
 
     const title = document.createElement("h3");
     title.textContent = `${character.name}`;
+
+    const speciesParagraph = document.createElement("p");
+    speciesParagraph.className = "speciesParagraph";
+
+    if (character.species == "Human") {
+      speciesParagraph.textContent = "Karakter : İnsan";
+    } else if (character.species == "Alien") {
+      speciesParagraph.textContent = "Karakter : Yabancı";
+    } else if (character.species == "Robot") {
+      speciesParagraph.textContent = "Karakter : Robot";
+    }
 
     const statusParagraph = document.createElement("p");
     statusParagraph.className = "aliveStatus";
@@ -48,18 +112,17 @@ const renderCharactes = (character) => {
     div.appendChild(image);
     div.appendChild(title);
     div.appendChild(statusParagraph);
+    div.appendChild(speciesParagraph);
 
-    return div;
-  });
-
-  charactersItems.forEach((data) => {
-    row.appendChild(data);
+    row.appendChild(div);
   });
 };
 
 charactersFetchData()
   .then((value) => {
-    renderCharactes(value.results);
+    renderCharacters(value.results);
+    selectOptionRender(value.results);
+    initStatusFiltered(value.results);
   })
   .catch((error) => {
     console.log(error);
