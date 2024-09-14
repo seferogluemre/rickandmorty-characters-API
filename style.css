@@ -1,0 +1,42 @@
+body {
+  background-color: #dee5d4 !important;
+  color: #8eaccd !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+.card {
+  width: 260px !important;
+  height: 310px;
+  border: none !important;
+  box-shadow: 0 0 4px black;
+  box-sizing: border-box;
+  background-color: #dee5d4 !important;
+  margin: 20px 25px;
+  padding: 0px !important;
+  border-radius: 25px !important;
+}
+.card img {
+  width: 100%;
+  margin: 0px 0px 25px 0px;
+  border-radius: 25px;
+}
+.card h3 {
+  font-size: 20px !important;
+  text-align: center;
+  font-weight: bold !important;
+}
+.aliveStatus {
+  color: #7fa8fa !important;
+  font-size: 22px !important;
+  margin: 15px auto;
+}
+.statusDead {
+  color: red !important;
+}
+.statusUnknown {
+  color: #cacaca !important; /* Gri renk */
+  background-color: #050505; /* Hafif gri arka plan */
+  border-radius: 25px;
+  padding: 10px;
+}
